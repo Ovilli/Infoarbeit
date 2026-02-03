@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Async Task</title>
+</head>
+<body>
+
+<h1>Async Task</h1>
+<button id="loadBtn">Load Joke</button>
+<p id="output">Click the button to load data</p>
+
+<script>
+    const button = document.getElementById("loadBtn");
+    const output = document.getElementById("output");
+
+
+    async function loadJoke() {
+        try {
+            output.textContent = "Loading...";
+            const response = await fetch("https://official-joke-api.appspot.com/random_joke");
+            const joke = await response.json();
+            output.textContent = joke.setup + " - " + joke.punchline;
+        }
+        catch(error){
+            output.textContent = "An error occured: " + error.message;
+        }
+        
+    }
+
+    // TASK:
+    // 1. Create an async function called loadJoke
+    // 2. Inside the function:
+    //    - show "Loading..." in the <p>
+    //    - fetch data from: https://official-joke-api.appspot.com/random_joke
+    //    - convert the response to JSON
+    //    - display the joke (setup + punchline) in the <p>
+    // 3. Use try / catch for error handling
+    // 4. Use async / await (no .then())
+
+    button.addEventListener("click", () => {
+        loadJoke();
+    });
+</script>
+
+</body>
+</html>
