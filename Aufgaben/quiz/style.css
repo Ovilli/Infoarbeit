@@ -30,17 +30,31 @@ body {
 
 body::before {
     content: '';
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    min-height: 100vh;
     background-image: 
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(48, 54, 61, 0.1) 2px, rgba(48, 54, 61, 0.1) 4px),
-        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(48, 54, 61, 0.1) 2px, rgba(48, 54, 61, 0.1) 4px);
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(48, 54, 61, 0.1) 2px,
+            rgba(48, 54, 61, 0.1) 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(48, 54, 61, 0.1) 2px,
+            rgba(48, 54, 61, 0.1) 4px
+        );
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
 }
+
 
 .quiz-container {
     position: relative;
@@ -575,6 +589,16 @@ body::before {
     color: var(--terminal-green);
 }
 
+.modal-dialog {
+    max-height: 90vh;
+    margin: 1.75rem auto;
+}
+
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
 .results-summary {
     display: flex;
     gap: 3rem;
@@ -644,9 +668,12 @@ body::before {
     margin-top: 1rem;
 }
 
-.detailed-results {
+/* Fixed: Changed from .detailed-results to #detailedResults to match JavaScript */
+#detailedResults {
     max-height: 400px;
     overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-top: 1.5rem;
 }
 
 .result-item {
@@ -672,6 +699,42 @@ body::before {
 .result-answer {
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* Custom scrollbar for detailed results to match theme */
+#detailedResults::-webkit-scrollbar {
+    width: 8px;
+}
+
+#detailedResults::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+#detailedResults::-webkit-scrollbar-thumb {
+    background: var(--terminal-green);
+    border-radius: 4px;
+}
+
+#detailedResults::-webkit-scrollbar-thumb:hover {
+    background: #2ea44f;
+}
+
+/* Modal body scrollbar styling */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--terminal-green);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #2ea44f;
 }
 
 /* Responsive Design */
@@ -718,4 +781,26 @@ body::before {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
+}
+
+/* Fix modal backdrop z-index issue */
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+
+.modal {
+    z-index: 1050 !important;
+}
+
+.modal-dialog {
+    z-index: 1060 !important;
+}
+
+/* Prevent multiple backdrops from stacking */
+body.modal-open {
+    overflow: hidden;
+}
+
+body.modal-open .modal-backdrop:not(:first-of-type) {
+    display: none;
 }

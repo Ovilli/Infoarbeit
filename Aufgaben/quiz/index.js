@@ -917,9 +917,16 @@ function arraysEqual(a, b) {
 }
 
 function showResults(results) {
-    const modal = new bootstrap.Modal(document.getElementById('resultsModal'));
+    const modalEl = document.getElementById('resultsModal');
     
-    // Update score circle
+    // Remove any existing backdrops first
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+    
+    const modal = new bootstrap.Modal(modalEl, {
+        backdrop: true,
+        keyboard: true
+    });
+    
     const percentage = results.percentage;
     const circumference = 2 * Math.PI * 90;
     const offset = circumference - (percentage / 100) * circumference;
@@ -929,7 +936,6 @@ function showResults(results) {
     document.getElementById('correctAnswers').textContent = results.correct;
     document.getElementById('totalQuestions').textContent = results.total;
     
-    // Score message and rating
     let message, rating;
     if (percentage >= 90) {
         message = '🎉 Ausgezeichnet!';
@@ -951,25 +957,22 @@ function showResults(results) {
     document.getElementById('scoreMessage').textContent = message;
     document.getElementById('scoreRating').textContent = rating;
     
-    // Detailed results
-    const detailsHTML = results.details.map((detail, index) => `
-        <div class="result-item ${detail.isCorrect ? 'correct' : 'incorrect'}">
-            <div class="result-question">
-                ${index + 1}. ${detail.question}
-                ${detail.isCorrect ? 
-                    '<i class="bi bi-check-circle-fill text-success float-end"></i>' : 
-                    '<i class="bi bi-x-circle-fill text-danger float-end"></i>'}
+    document.getElementById('detailedResults').innerHTML =
+        results.details.map((detail, index) => `
+            <div class="result-item ${detail.isCorrect ? 'correct' : 'incorrect'}">
+                <div class="result-question">
+                    ${index + 1}. ${detail.question}
+                    ${detail.isCorrect
+                        ? '<i class="bi bi-check-circle-fill text-success float-end"></i>'
+                        : '<i class="bi bi-x-circle-fill text-danger float-end"></i>'}
+                </div>
+                <div class="result-answer">
+                    ${detail.isCorrect ? 'Richtig beantwortet' : 'Falsch beantwortet'}
+                </div>
             </div>
-            <div class="result-answer">
-                ${detail.isCorrect ? 'Richtig beantwortet' : 'Falsch beantwortet'}
-            </div>
-        </div>
-    `).join('');
-    
-    document.getElementById('detailedResults').innerHTML = detailsHTML;
+        `).join('');
     
     modal.show();
 }
-
 // Initialize
 updateNavigationButtons();
